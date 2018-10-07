@@ -61,11 +61,11 @@ class View extends Component {
             for (let i = 0; i < whole; i++) {
                 if (i < current) {
                     circles.push(
-                        <div style={Object.assign({}, circleStyle, {backgroundColor: 'blue'})}>
+                        <div style={Object.assign({}, circleStyle, {backgroundColor: '#5d5d5d'})}>
                         </div>);
                 } else {
                     circles.push(
-                        <div style={Object.assign({}, circleStyle, {backgroundColor: 'red'})}>
+                        <div style={Object.assign({}, circleStyle, {backgroundColor: '#929292'})}>
                         </div>);
                 }
             }
@@ -76,7 +76,7 @@ class View extends Component {
     checkIfDisabled() {
         if (this.props.location && this.props.savedData) {
             if (this.props.location.currentLocation === 1 && this.props.savedData.inputs) {
-                if (this.props.savedData.inputs.width && this.props.savedData.inputs.height && this.props.savedData.inputs.depth) {
+                if (this.props.savedData.inputs.width > 100 && this.props.savedData.inputs.height > 100 && this.props.savedData.inputs.depth > 100) {
                     return false;
                 } else {
                     return true;
@@ -91,14 +91,14 @@ class View extends Component {
               <div style={{width: '100%', paddingTop: '16px', paddingBottom: '16px', textAlign: 'center'}}>
                   {this.getLocationCircles(this.props.location.currentLocation, this.props.location.numberOfViews)}
               </div>
-              <div style={{display: 'inline-block'}}>
-                  <span>
+              <div style={{display: 'inline-block', width: '100%', textAlign: 'center'}}>
+                  <span style={{fontSize: '24px'}}>
                       {this.props.object && this.props.object.header}
                   </span>
               </div>
               <div>
                   {(this.props.object && this.props.object.inputFields) &&
-                  <div>
+                  <div style={{width: '100%', textAlign: 'center'}}>
                       {this.generateInputs(this.props.object.inputFields)}
                   </div>}
                   {(this.props.object && this.props.object.component) &&

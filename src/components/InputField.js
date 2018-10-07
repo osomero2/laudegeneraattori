@@ -51,8 +51,8 @@ class InputField extends Component {
     return (
       <div style={{width: '100%', marginTop: '16px'}}>
           <div>
-              <span style={{fontSize: '24px', color: (this.state.hasValue || this.props.value) ? '#55616e' : '#121212', transition: '1s'}}>
-                {this.props.header}
+              <span style={{fontSize: '16px', color: (this.state.hasValue || this.props.value) ? '#55616e' : '#121212', transition: '1s'}}>
+                {this.props.header} :
               </span>
           </div>
           <div style={{marginTop: '8px'}}>
@@ -62,11 +62,12 @@ class InputField extends Component {
                   onBlur={(event) => this.handleBlur(event.target.value)}
                   onChange={(event) => this.handleChange(event.target.value, this.props.key)}
                   style={{
-                      width: this.state.active ? '90%' : '50%',
-                      padding: '16px',
+                      textAlign: 'center',
+                      width: '40%',
+                      padding: '8px',
                       border: 0,
                       borderRadius: '8px',
-                      fontSize: '18px',
+                      fontSize: '14px',
                       transition: '1s'
                   }}/>
           </div>

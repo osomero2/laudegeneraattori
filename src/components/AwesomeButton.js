@@ -23,7 +23,7 @@ class AwesomeButton extends Component {
                         style={{
                             padding: '16px',
                             border: '0',
-                            backgroundColor: this.state.hovered ? '#B6B6B6' : '#cacaca',
+                            backgroundColor: !this.state.hovered ? '#B6B6B6' : '#9c9c9c',
                             color: '#121212',
                             transition: '1s',
                             borderRadius: '8px'

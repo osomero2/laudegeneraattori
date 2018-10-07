@@ -59,13 +59,20 @@ class App extends Component {
   render() {
     return (
       <div style={{width: '100vw', position: 'absolute', top: '0', left: '0'}}>
-        <div style={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-          <div style={{padding: '16px', borderRadius: '8px', backgroundColor: '#cacaca', minWidth: '80%', marginTop: '36px'}}>
-              <div style={{width: '100%'}}>
-                  <span style={{fontSize: '26px'}}>
-                      Puu Markun laudesuunittelija pro
-                  </span>
+          <div style={{width: '100%', backgroundColor: '#eeeeee', paddingBottom: '16px'}}>
+              <div style={{width: '100%', textAlign: 'center'}}>
+                  <img src={'https://puumarkku.com/wp/wp-content/uploads/2018/05/puumarkku-logo.png'} style={{width: '120px'}}/>
               </div>
+              <div style={{width: '100%', backgroundColor: '#eeeeee'}}>
+                  <div style={{width: '100%', textAlign: 'center'}}>
+                     <span style={{fontSize: '16'}}>
+                         Tarjouspyyntölomake
+                     </span>
+                  </div>
+              </div>
+          </div>
+        <div style={{width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+          <div style={{padding: '16px', borderRadius: '8px', backgroundColor: '#cacaca', width: '100%'}}>
               {this.handleView()}
           </div>
         </div>

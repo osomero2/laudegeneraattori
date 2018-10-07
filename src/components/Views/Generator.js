@@ -10,7 +10,10 @@ class Generator extends Component {
         this.state = {
             data: {lauteet: {}},
             uiObject: {},
-            mouseOverId: undefined
+            mouseOverId: undefined,
+            grabKiuas: false,
+            mousePosition: 0,
+            mousePositionStart: 0
         };
     }
 
@@ -28,6 +31,8 @@ class Generator extends Component {
             uiObject.generatorHeight = this.props.object.depth * 2;
             uiObject.containerHeight = containerHeight;
             uiObject.containerWidth = containerWidth;
+            uiObject.kiuasPositionY = 0;
+            uiObject.kiuasPositionX = 0;
             this.setState({uiObject});
         }
     }
@@ -35,8 +40,20 @@ class Generator extends Component {
     handleGenerator() {
         let keys = Object.keys(this.state.data.lauteet);
 
+        const handleKiuasPositionChange = (param, value) => {
+            let uiObject = Object.assign(this.state.uiObject);
+            if (!isNaN(value)) {
+                if (param === 'x' && value < (this.props.object.width * 2) - 100 && value >= 0) {
+                    uiObject.kiuasPositionX = parseInt(value) * 2;
+                    this.setState({uiObject});
+                } else if (param === 'y' && value < (this.props.object.depth * 2) - 100 && value >= 0) {
+                    uiObject.kiuasPositionY = parseInt(value) * 2;
+                    this.setState({uiObject});
+                }
+            }
+        };
+
         if (keys.length > 0) {
-            console.log(keys);
             return keys.map(key => {
                 if (key === 'yla') {
                     let style = this.state.data.lauteet[key];
@@ -111,7 +128,7 @@ class Generator extends Component {
                                 </div>
                                 <div style={{
                                     width: 100,
-                                    height: (this.state.uiObject.generatorHeight * .666666) + 'px',
+                                    height: (this.state.uiObject.generatorHeight * .555555) + 'px',
                                     borderTop: 0,
                                     borderLeft: 0,
                                     borderRight: 2,
@@ -240,6 +257,38 @@ class Generator extends Component {
                             </div>
                         )
                     }
+                } else if (key === 'kiuas') {
+                    return (
+                        <div
+                            style={{
+                            width: '100px',
+                            height: '100px',
+                            position: 'absolute',
+                            bottom: this.state.uiObject.kiuasPositionY,
+                            left: this.state.uiObject.kiuasPositionX,
+                            cursor: 'move',
+                            zIndex: 5,
+                            minWidth: '100px',
+                            minHeight: '100px',
+                            border: '1px solid #121212',
+                            borderRadius: '16px',
+                            backgroundColor: '#eeeeee'
+                        }}>
+                            <div style={{height: '100%', width: '100%', wordWrap: 'break-word'}}>
+                                <div style={{width: '100%', textAlign: 'center'}}>
+                                    <span style={{fontSize: '12px', color: '121212'}}>
+                                        Kiuas
+                                    </span>
+                                </div>
+                                <div style={{width: '90%', display: 'flex', justifyContent: 'center', overflow: 'hidden', paddingTop: '8px'}}>
+                                <input style={{width: '30px', padding: '8px', border: '0', borderRadius: '4px'}} placeholder={'X (cm):' + this.state.uiObject.kiuasPositionX} onBlur={(event) => handleKiuasPositionChange('x', event.target.value)}/>
+                                </div>
+                                <div style={{width: '90%', display: 'flex', justifyContent: 'center'}}>
+                                <input style={{width: '30px', padding: '8px', border: 0, borderRadius: '4px'}} placeholder={'Y (cm): ' + this.state.uiObject.kiuasPositionY}  onBlur={(event) => handleKiuasPositionChange('y', event.target.value)}/>
+                                </div>
+                            </div>
+                        </div>
+                    )
                 }
             })
         } else {
@@ -300,6 +349,11 @@ class Generator extends Component {
                 key: 'basic_ala',
                 tag: 'ala',
                 show: (this.props.object.width)
+            },
+            {
+                label: 'Aseta kiuas',
+                key: 'kiuas',
+                tag: 'kiuas'
             }
         ];
 
@@ -333,7 +387,8 @@ class Generator extends Component {
                         height: (this.state.uiObject && this.state.uiObject.generatorHeight) && this.state.uiObject.generatorHeight + 'px',
                         background: 'url(https://www.sketchuptextureclub.com/public/texture_m/0015-square-stone-tile-cm120x120-texture-seamless-bump.jpg)',
                         overflow: 'hidden',
-                        backgroundSize: '50px'
+                        backgroundSize: '50px',
+                        position: 'relative'
                     }}>
                         {this.handleGenerator()}
                     </div>
