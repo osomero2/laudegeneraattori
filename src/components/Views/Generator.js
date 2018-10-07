@@ -77,8 +77,6 @@ class Generator extends Component {
                                 <span style={{
                                     cursor: 'help',
                                     fontSize: '12px',
-                                    backgroundColor: '#cacaca',
-                                    borderRadius: '8px',
                                     color: '#121212'
                                 }}>
                                     Syvyys: 60cm,
@@ -115,8 +113,6 @@ class Generator extends Component {
                                         <span style={{
                                             cursor: 'help',
                                             fontSize: '12px',
-                                            backgroundColor: '#cacaca',
-                                            borderRadius: '8px',
                                             color: '#121212'
                                         }}>
                                             Syvyys: 50cm,
@@ -172,8 +168,6 @@ class Generator extends Component {
                                         <span style={{
                                             cursor: 'help',
                                             fontSize: '12px',
-                                            backgroundColor: '#cacaca',
-                                            borderRadius: '8px',
                                             color: '#121212',
                                         }}>
                                             Syvyys: 50cm,
@@ -247,9 +241,8 @@ class Generator extends Component {
                                     zIndex: 9,
                                     cursor: 'help',
                                     fontSize: '12px',
-                                    backgroundColor: '#cacaca',
-                                    borderRadius: '8px',
-                                    color: '#121212'
+                                    color: '#121212',
+                                    bottom: '16px'
                                 }}>
                                     Leveys: {this.state.uiObject.generatorWidth / 2 + 'cm'},
                                     Syvyys: {(((this.state.uiObject.generatorHeight * .66666) / 2) - 60).toString().substring(0, 3) + 'cm'}
@@ -368,15 +361,20 @@ class Generator extends Component {
         })
     }
 
+
     render() {
+        const handleRotation = () => {
+            console.log('eka tuli', this.state.uiObject.generatorHeight, this.state.uiObject.generatorWidth)
+            let uiObject = Object.assign({}, this.state.uiObject);
+            uiObject.generatorWidth = this.state.uiObject.generatorHeight;
+            uiObject.generatorHeight = this.state.uiObject.generatorWidth;
+            console.log('lähtee', uiObject.generatorHeight, uiObject.generatorWidth)
+            this.setState({uiObject});
+        };
+
         return (
             <div id={'generatorContainer'} style={{width: '100%', paddingTop: '16px', paddingBottom: '16px'}}>
-                <div>
-                    <div>
-                        <span style={{fontSize: '24px', color: '#121212'}}>
-                            Lisää lauteet
-                        </span>
-                    </div>
+                <div style={{width: '100%', textAlign: 'center'}}>
                     {this.getTools()}
                 </div>
                 <div style={{width: '100%', display: 'flex', justifyContent: 'center', marginTop: '16px'}}>
@@ -395,21 +393,24 @@ class Generator extends Component {
                     <div style={{
                         display: 'inline-block',
                         transform: 'rotate(90deg)',
-                        height: '30px',
+                        height: '10px',
                         position: 'relative',
-                        top: this.props.object.depth - 10 + 'px'
+                        top: (this.state.uiObject.generatorHeight / 2) - 10 + 'px'
                     }}>
                         {this.props.object &&
                         <span>
-                        {this.props.object.depth + 'cm'}
+                        {(this.state.uiObject.generatorHeight / 2) + 'cm'}
                     </span>}
                     </div>
                 </div>
                 <div style={{width: '100%', textAlign: 'center', marginTop: '30px'}}>
                     {this.props.object &&
                     <span>
-                        {this.props.object.width + 'cm'}
+                        {(this.state.uiObject.generatorWidth / 2) + 'cm'}
                     </span>}
+                </div>
+                <div style={{width: '100%', textAlign: 'center'}}>
+                    <AwesomeButton label={'Käännä sauna'} onClick={() => handleRotation()}/>
                 </div>
             </div>
         );
