@@ -22,8 +22,7 @@ class AwesomeButton extends Component {
                         onClick={() => this.props.onClick()}
                         style={{
                             padding: '16px',
-                            border: '0',
-                            backgroundColor: !this.state.hovered ? '#B6B6B6' : '#9c9c9c',
+                            backgroundColor: !this.state.hovered ? 'transparent' : '#d6d6d6',
                             color: '#121212',
                             transition: '1s',
                             borderRadius: '8px'

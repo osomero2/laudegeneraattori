@@ -26,7 +26,7 @@ class View extends Component {
 
                 return (
                     <InputField
-                        key={input.key}
+                        keyId={input.key}
                         value={(this.props.savedData && this.props.savedData.inputs) && this.props.savedData.inputs[input.key]}
                         header={input.label}
                         useAsNumeric={input.useAsNumeric}
@@ -54,18 +54,20 @@ class View extends Component {
             maxHeight: '12px',
             borderRadius: '6px',
             display: 'inline-block',
-            margin: '16px'
+            margin: '16px',
+            border: '1px',
+            borderStyle: 'solid'
         };
 
         if (current && whole) {
             for (let i = 0; i < whole; i++) {
                 if (i < current) {
                     circles.push(
-                        <div style={Object.assign({}, circleStyle, {backgroundColor: '#5d5d5d'})}>
+                        <div style={Object.assign({}, circleStyle, {borderColor: '#121212'})}>
                         </div>);
                 } else {
                     circles.push(
-                        <div style={Object.assign({}, circleStyle, {backgroundColor: '#929292'})}>
+                        <div style={Object.assign({}, circleStyle, {borderColor: '#949494'})}>
                         </div>);
                 }
             }

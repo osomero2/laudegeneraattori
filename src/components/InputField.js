@@ -60,12 +60,11 @@ class InputField extends Component {
                   placeholder={this.props.value}
                   onFocus={() => this.setState({active: true})}
                   onBlur={(event) => this.handleBlur(event.target.value)}
-                  onChange={(event) => this.handleChange(event.target.value, this.props.key)}
+                  onChange={(event) => this.handleChange(event.target.value, this.props.keyId)}
                   style={{
                       textAlign: 'center',
                       width: '40%',
                       padding: '8px',
-                      border: 0,
                       borderRadius: '8px',
                       fontSize: '14px',
                       transition: '1s'
@@ -88,7 +87,7 @@ InputField.PropTypes = {
     warningText: PropTypes.string,
     useAsNumeric: PropTypes.booleanValue,
     onBlur: PropTypes.func,
-    key: PropTypes.string,
+    keyId: PropTypes.string,
     value: PropTypes.string
 };
 

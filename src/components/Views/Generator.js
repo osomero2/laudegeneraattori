@@ -133,6 +133,9 @@ class Generator extends Component {
                                     borderColor: '#121212',
                                     backgroundColor: '#ececec'
                                 }}>
+                                    {(this.state.data.lauteet.customs && this.state.data.lauteet.customs.kasinoja) &&
+                                    <div style={{zIndex: 10, width: '100px', backgroundColor: '#cacaca', height: '20px', display: 'block', position: 'absolute', border: '1px solid #121212', bottom: '-5px'}}>
+                                    </div>}
                                 </div>
                             </div>);
                     } else if (style && style.u) {
@@ -194,6 +197,9 @@ class Generator extends Component {
                                         borderColor: '#121212',
                                         backgroundColor: '#ececec'
                                     }}>
+                                        {(this.state.data.lauteet.customs && this.state.data.lauteet.customs.kasinoja) &&
+                                        <div style={{zIndex: 10, width: '100px', backgroundColor: '#cacaca', height: '20px', display: 'block', position: 'absolute', border: '1px solid #121212', bottom: '-5px'}}>
+                                        </div>}
                                     </div>
                                     <div style={{
                                         display: 'inline-block',
@@ -208,7 +214,9 @@ class Generator extends Component {
                                         borderColor: '#121212',
                                         backgroundColor: '#ececec'
                                     }}>
-
+                                        {(this.state.data.lauteet.customs && this.state.data.lauteet.customs.kasinoja) &&
+                                        <div style={{zIndex: 10, width: '100px', backgroundColor: '#cacaca', height: '20px', display: 'block', position: 'absolute', border: '1px solid #121212', bottom: '-5px'}}>
+                                        </div>}
                                     </div>
                                 </div>
                             </div>
@@ -282,6 +290,34 @@ class Generator extends Component {
                             </div>
                         </div>
                     )
+                } else if (key === 'customs_selka') {
+                    let style = this.state.data.lauteet[key];
+                        if (style && style.selkanoja) {
+                            return (
+                                <div style={{position: 'absolute', top: '0', left: '0', width: '100%', height: '100%', zIndex: 5}}>
+                                <div style={{width: '100%', height: '4px', backgroundColor: '#121212'}}>
+                                </div>
+                                    {(this.state.data.lauteet.yla && this.state.data.lauteet.yla.l
+                                        || this.state.data.lauteet.yla && this.state.data.lauteet.yla.u) &&
+                                    <div style={{
+                                        display: 'inline-block',
+                                        width: '4px',
+                                        height: (this.state.uiObject.generatorHeight * .666666) + 30 + 'px',
+                                        backgroundColor: '#121212'
+                                    }}>
+                                    </div>}
+                                    {(this.state.data.lauteet.yla && this.state.data.lauteet.yla.u) &&
+                                    <div style={{
+                                        display: 'inline-block',
+                                        width: '4px',
+                                        height: (this.state.uiObject.generatorHeight * .666666) + 30 + 'px',
+                                        backgroundColor: '#121212',
+                                        float: 'right'
+                                    }}>
+                                    </div>}
+                                </div>
+                            )
+                        }
                 }
             })
         } else {
@@ -302,7 +338,7 @@ class Generator extends Component {
         }
     }
 
-    getTools() {
+    getTools(param) {
 
         const handleAdd = (tag, key) => {
             if (key) {
@@ -316,6 +352,33 @@ class Generator extends Component {
                 this.setState({data})
             }
             this.props.onChange(this.state.data);
+        };
+
+
+        return param.map(tool => {
+            return (
+                <AwesomeButton
+                    label={tool.label}
+                    onClick={() => handleAdd(tool.tag, tool.key)}
+                    show={tool.show}
+                />
+            )
+        })
+    }
+
+
+    render() {
+        const checkVisibility = () => {
+            if (this.state.data && this.state.data.lauteet && this.state.data.lauteet.yla) {
+                let keys = Object.keys(this.state.data.lauteet.yla);
+                if (keys.includes('l') || keys.includes('u')) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
         };
 
         const tools = [
@@ -336,13 +399,33 @@ class Generator extends Component {
                 key: 'u',
                 tag: 'yla',
                 show: (this.props.object.width > 220)
-            },
+            }
+        ];
+
+        const alalauteet = [
             {
                 label: 'Alempi suora laude',
                 key: 'basic_ala',
                 tag: 'ala',
                 show: (this.props.object.width)
+            }
+        ];
+
+        const lisaosat = [
+            {
+                label: 'Käsinojat',
+                key: 'kasinoja',
+                tag: 'customs',
+                show: checkVisibility()
             },
+            {
+                label: 'Selkänojat',
+                key: 'selkanoja',
+                tag: 'customs_selka'
+            }
+        ];
+
+        const configTools = [
             {
                 label: 'Aseta kiuas',
                 key: 'kiuas',
@@ -350,67 +433,93 @@ class Generator extends Component {
             }
         ];
 
-        return tools.map(tool => {
-            return (
-                <AwesomeButton
-                    label={tool.label}
-                    onClick={() => handleAdd(tool.tag, tool.key)}
-                    show={tool.show}
-                />
-            )
-        })
-    }
-
-
-    render() {
         const handleRotation = () => {
-            console.log('eka tuli', this.state.uiObject.generatorHeight, this.state.uiObject.generatorWidth)
             let uiObject = Object.assign({}, this.state.uiObject);
             uiObject.generatorWidth = this.state.uiObject.generatorHeight;
             uiObject.generatorHeight = this.state.uiObject.generatorWidth;
-            console.log('lähtee', uiObject.generatorHeight, uiObject.generatorWidth)
             this.setState({uiObject});
         };
 
         return (
             <div id={'generatorContainer'} style={{width: '100%', paddingTop: '16px', paddingBottom: '16px'}}>
-                <div style={{width: '100%', textAlign: 'center'}}>
-                    {this.getTools()}
-                </div>
-                <div style={{width: '100%', display: 'flex', justifyContent: 'center', marginTop: '16px'}}>
-                    <div style={{
-                        borderRadius: '4px',
-                        display: 'inline-block',
-                        width: (this.state.uiObject && this.state.uiObject.generatorWidth) && this.state.uiObject.generatorWidth + 'px',
-                        height: (this.state.uiObject && this.state.uiObject.generatorHeight) && this.state.uiObject.generatorHeight + 'px',
-                        background: 'url(https://www.sketchuptextureclub.com/public/texture_m/0015-square-stone-tile-cm120x120-texture-seamless-bump.jpg)',
-                        overflow: 'hidden',
-                        backgroundSize: '50px',
-                        position: 'relative'
-                    }}>
-                        {this.handleGenerator()}
+                <div style={{width: '100%'}}>
+                    <div style={{width: '25%', display: 'inline-block', verticalAlign: 'top', textAlign: 'center'}}>
+                        <div>
+                            <span>
+                                Työkalut
+                            </span>
+                        </div>
+                        <div>
+                            {this.getTools(configTools)}
+                            <AwesomeButton label={'Käännä sauna'} onClick={() => handleRotation()}/>
+                        </div>
                     </div>
-                    <div style={{
-                        display: 'inline-block',
-                        transform: 'rotate(90deg)',
-                        height: '10px',
-                        position: 'relative',
-                        top: (this.state.uiObject.generatorHeight / 2) - 10 + 'px'
-                    }}>
-                        {this.props.object &&
-                        <span>
-                        {(this.state.uiObject.generatorHeight / 2) + 'cm'}
-                    </span>}
+                    <div style={{width: '25%', display: 'inline-block', verticalAlign: 'top', textAlign: 'center'}}>
+                        <div>
+                            <span>
+                                Ylälauteet
+                            </span>
+                        </div>
+                        <div>
+                            {this.getTools(tools)}
+                        </div>
+                    </div>
+                    <div style={{width: '25%', display: 'inline-block', verticalAlign: 'top', textAlign: 'center'}}>
+                        <div>
+                            <span>
+                                Alalauteet
+                            </span>
+                        </div>
+                        <div>
+                            {this.getTools(alalauteet)}
+                        </div>
+                    </div>
+                    <div style={{width: '25%', display: 'inline-block', verticalAlign: 'top', textAlign: 'center'}}>
+                        <div>
+                            <span>
+                                Lisäosat
+                            </span>
+                        </div>
+                        <div>
+                            {this.getTools(lisaosat)}
+                        </div>
                     </div>
                 </div>
-                <div style={{width: '100%', textAlign: 'center', marginTop: '30px'}}>
-                    {this.props.object &&
-                    <span>
-                        {(this.state.uiObject.generatorWidth / 2) + 'cm'}
-                    </span>}
-                </div>
-                <div style={{width: '100%', textAlign: 'center'}}>
-                    <AwesomeButton label={'Käännä sauna'} onClick={() => handleRotation()}/>
+                <div style={{width: '100%', display: 'flex', justifyContent: 'center', marginTop: '32px'}}>
+                    <div style={{position: 'relative', left: '30px'}}>
+                            <div style={{
+                                borderRadius: '4px',
+                                display: 'inline-block',
+                                width: (this.state.uiObject && this.state.uiObject.generatorWidth) && this.state.uiObject.generatorWidth + 'px',
+                                height: (this.state.uiObject && this.state.uiObject.generatorHeight) && this.state.uiObject.generatorHeight + 'px',
+                                background: 'url(https://www.sketchuptextureclub.com/public/texture_m/0015-square-stone-tile-cm120x120-texture-seamless-bump.jpg)',
+                                overflow: 'hidden',
+                                backgroundSize: '50px',
+                                position: 'relative',
+                                border: '1px solid #121212'
+                            }}>
+                                {this.handleGenerator()}
+                            </div>
+                            <div style={{
+                                display: 'inline-block',
+                                transform: 'rotate(90deg)',
+                                height: '10px',
+                                position: 'relative',
+                                verticalAlign: 'top',
+                                top: (this.state.uiObject.generatorHeight / 2) - 10 + 'px'
+                            }}>
+                                {this.props.object &&
+                                <span>
+                                {(this.state.uiObject.generatorHeight / 2) + 'cm'}
+                            </span>}
+                            </div>
+                            <div style={{width: '100%', textAlign: 'center', marginTop: '30px'}}>
+                                {this.props.object &&
+                                <span>
+                                    {(this.state.uiObject.generatorWidth / 2) + 'cm'}
+                                </span>}
+                            </div>
+                    </div>
                 </div>
             </div>
         );
