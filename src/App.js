@@ -10,9 +10,21 @@ class App extends Component {
         this.state = {
             viewNumber: 0,
             data: {lauteet: {}},
-            mouseHover: false
-
+            mouseHover: false,
+            screenMode: 'full'
         };
+    }
+
+    componentDidMount() {
+        let screenWidth = window.innerWidth;
+
+        if (screenWidth) {
+            if (screenWidth < 600 && this.state.screenMode === 'full') {
+                this.setState({screenMode: 'mobile'})
+            } else if (this.state.screenMode === 'mobile' && screenWidth > 600) {
+                this.setState({screenMode: 'full'})
+            }
+        }
     }
 
     handleView() {
@@ -42,7 +54,9 @@ class App extends Component {
             },
             {
                 header: 'Pohjapiirrokset',
-                component: <Generator savedData={this.state.data}
+                component: <Generator
+                                      screenMode={this.state.screenMode}
+                                      savedData={this.state.data}
                                       onChange={(data) => this.handleChange(data, 'generator')}
                                       object={this.state.data.inputs}/>
             },

@@ -33,6 +33,7 @@ class Generator extends Component {
             uiObject.containerWidth = containerWidth;
             uiObject.kiuasPositionY = 0;
             uiObject.kiuasPositionX = 0;
+            uiObject.jakkaraPositionX = 0;
             this.setState({uiObject});
         }
     }
@@ -50,6 +51,14 @@ class Generator extends Component {
                     uiObject.kiuasPositionY = parseInt(value) * 2;
                     this.setState({uiObject});
                 }
+            }
+        };
+
+        const handleJakkaraPositionChange = (value) => {
+            let uiObject = Object.assign(this.state.uiObject);
+            if (!isNaN(value)) {
+                uiObject.jakkaraPositionX = parseInt(value);
+                this.setState({uiObject});
             }
         };
 
@@ -294,9 +303,16 @@ class Generator extends Component {
                     let style = this.state.data.lauteet[key];
                         if (style && style.selkanoja) {
                             return (
-                                <div style={{position: 'absolute', top: '0', left: '0', width: '100%', height: '100%', zIndex: 5}}>
-                                <div style={{width: '100%', height: '4px', backgroundColor: '#121212'}}>
-                                </div>
+                                <div style={{
+                                    position: 'absolute',
+                                    top: '0',
+                                    left: '0',
+                                    width: '100%',
+                                    height: '100%',
+                                    zIndex: 5
+                                }}>
+                                    <div style={{width: '100%', height: '4px', backgroundColor: '#121212'}}>
+                                    </div>
                                     {(this.state.data.lauteet.yla && this.state.data.lauteet.yla.l
                                         || this.state.data.lauteet.yla && this.state.data.lauteet.yla.u) &&
                                     <div style={{
@@ -315,11 +331,36 @@ class Generator extends Component {
                                         float: 'right'
                                     }}>
                                     </div>}
-                                </div>
-                            )
+                                </div>);
                         }
-                }
-            })
+                        } else if (key === 'custom_jakkara') {
+                            let style = this.state.data.lauteet[key];
+                            if (style && style.jakkara) {
+                                return (
+                                    <div style={{
+                                        width: '80px',
+                                        height: '50px',
+                                        position: 'absolute',
+                                        backgroundColor: '#cacaca',
+                                        zIndex: 1,
+                                        display: 'block',
+                                        bottom: 0,
+                                        right: this.state.uiObject.jakkaraPositionX,
+                                        borderRadius: 4,
+                                        border: '1px solid #121212'
+                                    }}>
+                                        <div style={{width: '100%', textAlign: 'center'}}>
+                                                <span style={{fontSize: 10, color: '#121212'}}>
+                                                    JAKKARA
+                                                </span>
+                                        </div>
+                                        <div style={{width: '90%', display: 'flex', justifyContent: 'center', overflow: 'hidden'}}>
+                                            <input style={{width: '30px', padding: '8px', border: '0', borderRadius: '4px'}} placeholder={'X (cm):' + this.state.uiObject.jakkaraPositionX} onBlur={(event) => handleJakkaraPositionChange(event.target.value)}/>
+                                        </div>
+                                    </div>
+                                )
+                            }
+                        }})
         } else {
             return (
                 <div style={{
@@ -349,6 +390,7 @@ class Generator extends Component {
                     data.lauteet[tag] = {};
                     data.lauteet[tag][key] = true;
                 }
+                console.log(data);
                 this.setState({data})
             }
             this.props.onChange(this.state.data);
@@ -422,6 +464,11 @@ class Generator extends Component {
                 label: 'Selkänojat',
                 key: 'selkanoja',
                 tag: 'customs_selka'
+            },
+            {
+                label: 'Jakkara',
+                key: 'jakkara',
+                tag: 'custom_jakkara'
             }
         ];
 
@@ -486,7 +533,7 @@ class Generator extends Component {
                     </div>
                 </div>
                 <div style={{width: '100%', display: 'flex', justifyContent: 'center', marginTop: '32px'}}>
-                    <div style={{position: 'relative', left: '30px'}}>
+                    <div style={{position: 'relative', left: this.props.screenMode === 'full' ? '30px' : '0px', transform: `scale(${this.props.screenMode === 'full' ? 1 : .7})`}}>
                             <div style={{
                                 borderRadius: '4px',
                                 display: 'inline-block',
@@ -500,25 +547,32 @@ class Generator extends Component {
                             }}>
                                 {this.handleGenerator()}
                             </div>
+                        {this.props.screenMode === 'full' &&
                             <div style={{
                                 display: 'inline-block',
                                 transform: 'rotate(90deg)',
                                 height: '10px',
                                 position: 'relative',
                                 verticalAlign: 'top',
-                                top: (this.state.uiObject.generatorHeight / 2) - 10 + 'px'
-                            }}>
+                                top: (this.state.uiObject.generatorHeight / 2) - 10 + 'px'}}>
                                 {this.props.object &&
                                 <span>
                                 {(this.state.uiObject.generatorHeight / 2) + 'cm'}
-                            </span>}
-                            </div>
+                                </span>}
+                            </div>}
+                        {this.props.screenMode === 'full' &&
                             <div style={{width: '100%', textAlign: 'center', marginTop: '30px'}}>
                                 {this.props.object &&
                                 <span>
                                     {(this.state.uiObject.generatorWidth / 2) + 'cm'}
                                 </span>}
-                            </div>
+                            </div>}
+                        {this.props.screenMode === 'mobile' &&
+                        <div style={{paddingTop: '16px', width: '100%', textAlign: 'center'}}>
+                            <span style={{fontSize: '16px', color: '#121212'}}>
+                                {(this.state.uiObject.generatorWidth / 2) + 'cm x' + (this.state.uiObject.generatorWidth / 2) + 'cm'}
+                            </span>
+                        </div>}
                     </div>
                 </div>
             </div>
@@ -529,7 +583,8 @@ class Generator extends Component {
 Generator.PropTypes = {
     object: PropTypes.object,
     onChange: PropTypes.func,
-    savedData: PropTypes.object
+    savedData: PropTypes.object,
+    screenMode: PropTypes.string
 };
 
 export default Generator;
